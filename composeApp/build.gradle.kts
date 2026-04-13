@@ -45,6 +45,12 @@ kotlin {
     }
 }
 
+val currentOs: org.gradle.internal.os.OperatingSystem = org.gradle.internal.os.OperatingSystem.current()
+val nativeLibsDir: String = when {
+    currentOs.isWindows -> "nativeLibs/windows"
+    currentOs.isMacOsX  -> "nativeLibs/macos"
+    else                -> "nativeLibs/linux"
+}
 
 compose.desktop {
     application {
@@ -54,7 +60,7 @@ compose.desktop {
 
         nativeDistributions {
             includeAllModules = true
-            targetFormats(TargetFormat.AppImage,)
+            targetFormats(TargetFormat.AppImage)
             packageName = "ShadeStream"
             packageVersion = "1.0.0"
 
@@ -69,6 +75,11 @@ compose.desktop {
     }
 }
 
-tasks.withType<JavaExec> {
-    systemProperty("java.library.path", project.layout.projectDirectory.dir("nativeLibs/windows").asFile.absolutePath)
+afterEvaluate {
+    tasks.withType<JavaExec>().matching { it.name in listOf("run", "jvmRun") }.configureEach {
+        systemProperty(
+            "java.library.path",
+            project.layout.projectDirectory.dir(nativeLibsDir).asFile.absolutePath
+        )
+    }
 }
