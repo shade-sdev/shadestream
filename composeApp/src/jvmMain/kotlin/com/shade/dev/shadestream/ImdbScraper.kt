@@ -10,7 +10,7 @@ import java.io.File
 import kotlin.random.Random
 
 private val APP_DIR = File(System.getProperty("user.home"), ".shadestream").also { it.mkdirs() }
-private val PLAYWRIGHT_DIR = File(APP_DIR, "browsers").also { it.mkdirs() }
+val PLAYWRIGHT_DIR = File(APP_DIR, "browsers").also { it.mkdirs() }
 
 fun installPlaywrightIfNeeded() {
     val marker = File(PLAYWRIGHT_DIR, ".installed")
@@ -21,6 +21,14 @@ fun installPlaywrightIfNeeded() {
         CLI.main(arrayOf("install"))
         println("[Playwright] Install complete.")
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+fun setEnv(key: String, value: String) {
+    val processEnvironment = Class.forName("java.lang.ProcessEnvironment")
+    val field = processEnvironment.getDeclaredField("theEnvironment").apply { isAccessible = true }
+    val env = field.get(null) as MutableMap<String, String>
+    env[key] = value
 }
 
 @Serializable

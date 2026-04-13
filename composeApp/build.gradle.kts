@@ -58,7 +58,7 @@ compose.desktop {
 
         jvmArgs(
             "-Djava.library.path=app/resources",
-            "-DPLAYWRIGHT_BROWSERS_PATH=${System.getProperty("user.home")}/.shadestream/browsers"
+            "--add-opens=java.base/java.lang=ALL-UNNAMED"
         )
 
         nativeDistributions {
@@ -80,10 +80,7 @@ compose.desktop {
 
 afterEvaluate {
     tasks.withType<JavaExec>().matching { it.name in listOf("run", "jvmRun") }.configureEach {
-        systemProperty(
-            "java.library.path",
-            project.layout.projectDirectory.dir(nativeLibsDir).asFile.absolutePath
-        )
-        environment("PLAYWRIGHT_BROWSERS_PATH", "${System.getProperty("user.home")}/.shadestream/browsers")
+        systemProperty("java.library.path", project.layout.projectDirectory.dir(nativeLibsDir).asFile.absolutePath)
+        jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
     }
 }

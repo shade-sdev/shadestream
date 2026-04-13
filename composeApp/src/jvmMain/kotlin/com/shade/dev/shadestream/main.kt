@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.libtorrent4j.SessionManager
 
 fun main() {
+    setEnv("PLAYWRIGHT_BROWSERS_PATH", PLAYWRIGHT_DIR.absolutePath)
     installPlaywrightIfNeeded()
 
     application {
