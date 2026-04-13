@@ -1,20 +1,8 @@
 package com.shade.dev.shadestream
 
-/**
- * IMDB Scraper — Kotlin
- * Dependencies: Playwright (JVM), jsoup, kotlinx-serialization
- *
- * build.gradle.kts deps:
- *   implementation("com.microsoft.playwright:playwright:1.44.0")
- *   implementation("org.jsoup:jsoup:1.17.2")
- *   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
- *   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
- */
-
 import com.microsoft.playwright.*
 import com.microsoft.playwright.options.LoadState
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -40,8 +28,6 @@ data class IMDBTitle(
     val posterUrl: String? = null,
 )
 
-// ── Config ────────────────────────────────────────────────────────────────────
-
 private val USER_AGENTS = listOf(
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -54,8 +40,6 @@ private val USER_AGENTS = listOf(
 private val CONTENT_RATINGS = setOf("G", "PG", "PG-13", "R", "NC-17", "TV-MA", "TV-14", "TV-G")
 
 val json = Json { prettyPrint = true; encodeDefaults = false }
-
-// ── Browser helpers ───────────────────────────────────────────────────────────
 
 fun humanDelay(minMs: Long = 1200, maxMs: Long = 3500) {
     Thread.sleep(Random.nextLong(minMs, maxMs))
@@ -98,7 +82,6 @@ fun createBrowserContext(playwright: Playwright): Pair<Browser, BrowserContext> 
             )
     )
 
-    // Remove navigator.webdriver fingerprint
     context.addInitScript(
         """
         Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -110,16 +93,12 @@ fun createBrowserContext(playwright: Playwright): Pair<Browser, BrowserContext> 
     return Pair(browser, context)
 }
 
-// ── Parsing ───────────────────────────────────────────────────────────────────
-
 fun parseTitlePage(html: String, url: String): IMDBTitle {
     val doc: Document = Jsoup.parse(html)
 
-    // Title
     val title = (doc.selectFirst("span[data-testid=hero__primary-text]")
         ?: doc.selectFirst("h1"))?.text()
 
-    // Metadata strip (year / content-rating / runtime)
     val metaItems = doc.select("ul.ipc-inline-list--show-dividers li")
         .map { it.text().trim() }
 
@@ -201,8 +180,6 @@ fun parseTitlePage(html: String, url: String): IMDBTitle {
     )
 }
 
-// ── Main scraper ──────────────────────────────────────────────────────────────
-
 fun scrapeImdb(url: String): IMDBTitle {
     Playwright.create().use { playwright ->
         val (browser, context) = createBrowserContext(playwright)
@@ -242,8 +219,6 @@ fun scrapeMultiple(urls: List<String>): List<IMDBTitle> {
         result
     }
 }
-
-// ── Entry point ───────────────────────────────────────────────────────────────
 
 fun main() {
     val target = "https://www.imdb.com/title/tt28650488"
