@@ -2,9 +2,12 @@ package com.shade.dev.shadestream
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import org.libtorrent4j.SessionManager
 
 fun main() {
     application {
+        val session = SessionManager()
+        session.start()
         installPlaywrightIfNeeded()
 
         Window(

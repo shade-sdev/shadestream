@@ -68,3 +68,7 @@ compose.desktop {
         }
     }
 }
+
+tasks.withType<JavaExec> {
+    systemProperty("java.library.path", project.layout.projectDirectory.dir("nativeLibs/windows").asFile.absolutePath)
+}
