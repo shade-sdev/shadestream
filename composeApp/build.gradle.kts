@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    kotlin("plugin.serialization") version "2.3.20"
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.serialization)
 
             implementation(libs.libtorrent4j)
             implementation(libs.libtorrent4j.windows)
@@ -36,6 +38,9 @@ kotlin {
             implementation(libs.vlcj)
 
             implementation(libs.slf4j.nop)
+
+            implementation(libs.playwright)
+            implementation(libs.jsoup)
         }
     }
 }
@@ -45,10 +50,21 @@ compose.desktop {
     application {
         mainClass = "com.shade.dev.shadestream.MainKt"
 
+        jvmArgs("-Djava.library.path=app/resources")
+
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.shade.dev.shadestream"
+            includeAllModules = true
+            targetFormats(TargetFormat.AppImage,)
+            packageName = "ShadeStream"
             packageVersion = "1.0.0"
+
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("nativeLibs"))
+
+            windows {
+                menuGroup = "ShadeStream"
+                perUserInstall = true
+                upgradeUuid = "a8f3c2d1-4b7e-4f9a-b2c3-d1e5f6a7b8c9"
+            }
         }
     }
 }
