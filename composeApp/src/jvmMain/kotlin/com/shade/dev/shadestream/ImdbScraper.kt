@@ -9,7 +9,19 @@ import org.jsoup.nodes.Document
 import java.io.File
 import kotlin.random.Random
 
-// ── Data model ────────────────────────────────────────────────────────────────
+private val APP_DIR = File(System.getProperty("user.home"), ".shadestream").also { it.mkdirs() }
+private val PLAYWRIGHT_DIR = File(APP_DIR, "browsers").also { it.mkdirs() }
+
+fun installPlaywrightIfNeeded() {
+    val marker = File(PLAYWRIGHT_DIR, ".installed")
+    if (!marker.exists()) {
+        println("[Playwright] Installing Browsers to ${PLAYWRIGHT_DIR.absolutePath}...")
+        PLAYWRIGHT_DIR.mkdirs()
+        marker.createNewFile()
+        CLI.main(arrayOf("install"))
+        println("[Playwright] Install complete.")
+    }
+}
 
 @Serializable
 data class IMDBTitle(

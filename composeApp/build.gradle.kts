@@ -56,7 +56,10 @@ compose.desktop {
     application {
         mainClass = "com.shade.dev.shadestream.MainKt"
 
-        jvmArgs("-Djava.library.path=app/resources")
+        jvmArgs(
+            "-Djava.library.path=app/resources",
+            "-DPLAYWRIGHT_BROWSERS_PATH=${System.getProperty("user.home")}/.shadestream/browsers"
+        )
 
         nativeDistributions {
             includeAllModules = true
@@ -81,5 +84,6 @@ afterEvaluate {
             "java.library.path",
             project.layout.projectDirectory.dir(nativeLibsDir).asFile.absolutePath
         )
+        environment("PLAYWRIGHT_BROWSERS_PATH", "${System.getProperty("user.home")}/.shadestream/browsers")
     }
 }
