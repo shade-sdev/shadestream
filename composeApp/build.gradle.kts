@@ -1,11 +1,11 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeHotReload)
-    kotlin("plugin.serialization") version "2.3.20"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.hot.reload)
 }
 
 kotlin {
@@ -18,17 +18,17 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.androidx.lifecycle.runtime.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.serialization)
+            implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.libtorrent4j)
             implementation(libs.libtorrent4j.windows)
