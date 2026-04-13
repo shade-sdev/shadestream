@@ -7,7 +7,7 @@ SCHEMA_VERSION = "1.0"
 ITEMS_PER_PAGE = 2000
 OUT_DIR        = "catalog"
 
-BASE_URL = "https://raw.githubusercontent.com/shadestream/shadestream/master/catalog"
+BASE_URL = "https://raw.githubusercontent.com/shade-sdev/shadestream/refs/heads/master/catalog"
 
 GENRES = [
     "Action", "Comedy", "Drama", "Horror", "Thriller",
